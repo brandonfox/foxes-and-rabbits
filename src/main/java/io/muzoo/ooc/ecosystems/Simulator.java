@@ -27,9 +27,9 @@ public class Simulator {
     private static final double RABBIT_CREATION_PROBABILITY = 0.08;
 
     // The list of animals in the field
-    private List animals;
+    private List<Animal> animals;
     // The list of animals just born
-    private List newAnimals;
+    private List<Animal> newAnimals;
     // The current state of the field.
     private Field field;
     // A second field, used to build the next stage of the simulation.
@@ -59,8 +59,8 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        animals = new ArrayList();
-        newAnimals = new ArrayList();
+        animals = new ArrayList<>();
+        newAnimals = new ArrayList<>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
@@ -101,17 +101,8 @@ public class Simulator {
         newAnimals.clear();
 
         // let all animals act
-        for (Iterator iter = animals.iterator(); iter.hasNext(); ) {
-            Object animal = iter.next();
-            if (animal instanceof Rabbit) {
-                Rabbit rabbit = (Rabbit) animal;
-                rabbit.run(updatedField, newAnimals);
-            } else if (animal instanceof Fox) {
-                Fox fox = (Fox) animal;
-                fox.hunt(field, updatedField, newAnimals);
-            } else {
-                System.out.println("found unknown animal");
-            }
+        for (Animal a:animals) {
+            a.beAnimal(field,updatedField,newAnimals);
         }
         // add new born animals to the list of animals
         animals.addAll(newAnimals);

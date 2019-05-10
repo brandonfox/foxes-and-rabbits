@@ -1,11 +1,12 @@
 package io.muzoo.ooc.ecosystems;
 
+import java.util.List;
 import java.util.Random;
 
 public abstract class Animal {
 
     //A shared random number generator to control breeding
-    private static final Random rand = new Random();
+    protected static final Random rand = new Random();
 
     //The animal's age
     protected int age;
@@ -21,10 +22,58 @@ public abstract class Animal {
             age = rand.nextInt(getMaxAge());
         }
     }
-    protected void incrementAge(){
+    private void incrementAge(){
         age++;
         if(age > getMaxAge()){
-            alive = false;
+            die();
+        }
+    }
+    public final void beAnimal(Field currentField, Field updatedField, List newAnimals){
+        incrementValues();
+        if(isAlive()){
+            breed(updatedField, newAnimals);
+            Location newLocation = huntOrMove(currentField,updatedField,location);
+            move(updatedField,newLocation);
+        }
+    }
+
+    /**
+     * Move the animal. If null animal dies
+     * @param updatedField The updated where the new move location will be saved
+     * @param locationToMove the location where the animal will be moved to
+     */
+    private void move(Field updatedField, Location locationToMove){
+        if (locationToMove != null) {
+            setLocation(locationToMove);
+            updatedField.place(this, locationToMove);
+        } else {
+            // can neither move nor stay - overcrowding - all locations taken
+            die();
+        }
+    }
+    public void die(){
+        alive = false;
+    }
+
+    /**
+     * This function to increment values (age, hunger etc..)
+     */
+    protected void incrementValues(){
+        incrementAge();
+    }
+
+    /**
+     * Use this function to find food and move animal
+     */
+
+    private void breed(Field updatedField, List newAnimals){
+        int births = getNewBirths();
+        for (int b = 0; b < births; b++) {
+            Animal newAnimal = getNewbornAnimal();
+            newAnimals.add(newAnimal);
+            Location loc = updatedField.randomAdjacentLocation(location);
+            newAnimal.setLocation(loc);
+            updatedField.place(newAnimal, loc);
         }
     }
 
@@ -34,7 +83,7 @@ public abstract class Animal {
      *
      * @return the number of births (may be zero).
      */
-    protected int breed(){
+    protected int getNewBirths(){
         int births = 0;
         if(canBreed() && rand.nextDouble() <= getBreedingProbability()){
             births = rand.nextInt(getMaxLitterSize());
@@ -50,6 +99,10 @@ public abstract class Animal {
     protected abstract double getBreedingProbability();
     //The maximum number of births at a time.
     protected abstract int getMaxLitterSize();
+    //Function to return animal type (Must be overriden in inheriting classes)
+    protected abstract Animal getNewbornAnimal();
+    //Function to find out where to move the animal to
+    protected abstract Location huntOrMove(Field currentField,Field updatedField, Location currentLocation);
     /**
      * An animal can breed if it has reached the breeding age.
      */

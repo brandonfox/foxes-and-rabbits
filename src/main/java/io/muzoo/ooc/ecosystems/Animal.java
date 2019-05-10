@@ -9,9 +9,9 @@ public abstract class Animal {
     protected static final Random rand = new Random();
 
     //The animal's age
-    protected int age;
+    private int age;
     //Whether the animal is a live or not
-    protected boolean alive;
+    private boolean alive;
     //The animal's position
     protected Location location;
 
@@ -28,6 +28,14 @@ public abstract class Animal {
             die();
         }
     }
+
+    /**\
+     * The function to do animally stuff
+     * (Aging and breeding and moving)
+     * @param currentField The current field the animal is on
+     * @param updatedField The future field the animal will (or wont) be on
+     * @param newAnimals The list to add new animal pups to
+     */
     public final void beAnimal(Field currentField, Field updatedField, List newAnimals){
         incrementValues();
         if(isAlive()){
@@ -51,6 +59,10 @@ public abstract class Animal {
             die();
         }
     }
+
+    /**
+     * Die :(
+     */
     public void die(){
         alive = false;
     }
@@ -63,9 +75,10 @@ public abstract class Animal {
     }
 
     /**
-     * Use this function to find food and move animal
+     * Make little animal babies
+     * @param updatedField The field to place the new animal babies on
+     * @param newAnimals The list to add the animal babies to for bookkeeping purposes
      */
-
     private void breed(Field updatedField, List newAnimals){
         int births = getNewBirths();
         for (int b = 0; b < births; b++) {
@@ -91,19 +104,39 @@ public abstract class Animal {
         return births;
     }
 
-    //The age at which this animal can breed.
+    /**
+     * @return The age at which an animal can breed
+     */
     protected abstract int getBreedingAge();
-    //The age to which this animal can live.
+    /**
+     * @return The age to which this animal can live
+     */
     protected abstract int getMaxAge();
-    //The likelihood of this animal breeding.
+    /**
+     * @return The likelihood of this animal breeding
+     */
     protected abstract double getBreedingProbability();
-    //The maximum number of births at a time.
+    /**
+     * @return The maximum number of babies per litter
+     */
     protected abstract int getMaxLitterSize();
-    //Function to return animal type (Must be overriden in inheriting classes)
+    /**
+     * @return New animal instance (Should be of same class)
+     */
     protected abstract Animal getNewbornAnimal();
-    //Function to find out where to move the animal to
+
+    /**
+     * The function to get food and move on the map
+     * @param currentField The field the animal is on
+     * @param updatedField The field the animal will (or wont) be on
+     * @param currentLocation The current location of the animal
+     * @return The new location after finding food or moving
+     */
     protected abstract Location huntOrMove(Field currentField,Field updatedField, Location currentLocation);
-    //Function to retrieve value of this animal as a food
+
+    /**
+     * @return The food value of this animal when eaten
+     */
     protected abstract int getFoodValue();
     /**
      * An animal can breed if it has reached the breeding age.

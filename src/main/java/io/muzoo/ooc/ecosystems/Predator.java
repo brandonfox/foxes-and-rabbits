@@ -60,7 +60,7 @@ public abstract class Predator extends Animal {
     private void incrementHunger() {
         foodLevel -= getPredatorLevel();
         if (foodLevel <= 0) {
-            alive = false;
+            die();
         }
     }
 
@@ -82,12 +82,17 @@ public abstract class Predator extends Animal {
         return true;
     }
 
-    //The maximum food this animal can store
+    /**
+     * @return The maximum food this animal can store
+     */
     protected abstract int getBellySize();
-    //The 'predator level' of this predator. Predators can only
-    //eat predators of a lower level
-    //Predator level also determines how much food this predator
-    //uses per tick
+    /**
+     * Get the 'predator level' of this predator. Predators
+     * can only eat predators of a lower level
+     * Predator level also determines how much food this predator
+     * uses per tick
+     * @return The predator level of this animal
+     */
     protected abstract int getPredatorLevel();
 
 }

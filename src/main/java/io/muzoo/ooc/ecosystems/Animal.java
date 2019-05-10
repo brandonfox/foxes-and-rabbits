@@ -103,6 +103,8 @@ public abstract class Animal {
     protected abstract Animal getNewbornAnimal();
     //Function to find out where to move the animal to
     protected abstract Location huntOrMove(Field currentField,Field updatedField, Location currentLocation);
+    //Function to retrieve value of this animal as a food
+    protected abstract int getFoodValue();
     /**
      * An animal can breed if it has reached the breeding age.
      */

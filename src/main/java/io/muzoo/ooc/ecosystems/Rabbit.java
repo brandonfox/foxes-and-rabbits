@@ -43,4 +43,9 @@ public class Rabbit extends Animal{
     protected Location huntOrMove(Field currentField,Field updatedField, Location currentLocation) {
         return updatedField.freeAdjacentLocation(currentLocation);
     }
+
+    @Override
+    protected int getFoodValue() {
+        return 4;
+    }
 }

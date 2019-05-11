@@ -21,9 +21,9 @@ public class Simulator {
     private static final int DEFAULT_DEPTH = 50;
 
     // The list of animals in the field
-    private List<Animal> animals;
+    private List<Actor> actors;
     // The list of animals just born
-    private List<Animal> newAnimals;
+    private List<Actor> newActors;
     // The current state of the field.
     private Field field;
     // A second field, used to build the next stage of the simulation.
@@ -53,8 +53,8 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
-        animals = new ArrayList<>();
-        newAnimals = new ArrayList<>();
+        actors = new ArrayList<>();
+        newActors = new ArrayList<>();
         field = new Field(depth, width);
         updatedField = new Field(depth, width);
 
@@ -92,14 +92,14 @@ public class Simulator {
      */
     public void simulateOneStep() {
         step++;
-        newAnimals.clear();
+        newActors.clear();
 
         // let all animals act
-        for (Animal a:animals) {
-            a.beAnimal(field,updatedField,newAnimals);
+        for (Actor a: actors) {
+            a.act(field,updatedField, newActors);
         }
         // add new born animals to the list of animals
-        animals.addAll(newAnimals);
+        actors.addAll(newActors);
 
         // Swap the field and updatedField at the end of the step.
         Field temp = field;
@@ -116,7 +116,7 @@ public class Simulator {
      */
     public void reset() {
         step = 0;
-        animals.clear();
+        actors.clear();
         field.clear();
         updatedField.clear();
         populate(field);
@@ -132,21 +132,21 @@ public class Simulator {
      */
     private void populate(Field field) {
         field.clear();
-        FieldAnimalFactory factory = new FieldAnimalFactory();
+        FieldActorFactory factory = new FieldActorFactory();
         factory.setAnimalProbability("rabbit",0.08);
         factory.setAnimalProbability("fox",0.02);
         factory.setAnimalProbability("tiger",0.005);
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                Animal newAnimal = factory.getNewRandomAnimal();
-                if(newAnimal != null) {
-                    animals.add(newAnimal);
-                    newAnimal.setLocation(row, col);
-                    field.place(newAnimal, row, col);
+                Actor newActor = factory.getNewRandomActor();
+                if(newActor != null) {
+                    actors.add(newActor);
+                    newActor.setLocation(row, col);
+                    field.place(newActor, row, col);
                 }
                 // else leave the location empty.
             }
         }
-        Collections.shuffle(animals);
+        Collections.shuffle(actors);
     }
 }

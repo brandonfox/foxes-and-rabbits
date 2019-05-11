@@ -7,18 +7,18 @@ import java.util.Random;
 /**
  * Acts as an animal factory purely for the initial map generation
  */
-public class FieldAnimalFactory {
+public class FieldActorFactory {
 
     private final Map<String,Double> animalProbabilities;
     private final Random random = new Random();
 
-    public FieldAnimalFactory(){
+    public FieldActorFactory(){
         animalProbabilities = new HashMap<>();
     }
     public void setAnimalProbability(String animal, double probability){
         animalProbabilities.put(animal,probability);
     }
-    public Animal getNewRandomAnimal(){
+    public Animal getNewRandomActor(){
         float animalDecider = random.nextFloat();
         for (String a:animalProbabilities.keySet()) {
             animalDecider -= animalProbabilities.get(a);

@@ -1,9 +1,7 @@
 package io.muzoo.ooc.ecosystems;
 
-import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collections;
 import java.awt.Color;
 
@@ -21,10 +19,6 @@ public class Simulator {
     private static final int DEFAULT_WIDTH = 50;
     // The default depth of the grid.
     private static final int DEFAULT_DEPTH = 50;
-    // The probability that a fox will be created in any given grid position.
-    private static final double FOX_CREATION_PROBABILITY = 0.02;
-    // The probability that a rabbit will be created in any given grid position.
-    private static final double RABBIT_CREATION_PROBABILITY = 0.08;
 
     // The list of animals in the field
     private List<Animal> animals;
@@ -137,20 +131,18 @@ public class Simulator {
      * @param field The field to be populated.
      */
     private void populate(Field field) {
-        Random rand = new Random();
         field.clear();
+        FieldAnimalFactory factory = new FieldAnimalFactory();
+        factory.setAnimalProbability("rabbit",0.08);
+        factory.setAnimalProbability("fox",0.02);
+        factory.setAnimalProbability("tiger",0.005);
         for (int row = 0; row < field.getDepth(); row++) {
             for (int col = 0; col < field.getWidth(); col++) {
-                if (rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
-                    Fox fox = new Fox(true);
-                    animals.add(fox);
-                    fox.setLocation(row, col);
-                    field.place(fox, row, col);
-                } else if (rand.nextDouble() <= RABBIT_CREATION_PROBABILITY) {
-                    Rabbit rabbit = new Rabbit(true);
-                    animals.add(rabbit);
-                    rabbit.setLocation(row, col);
-                    field.place(rabbit, row, col);
+                Animal newAnimal = factory.getNewRandomAnimal();
+                if(newAnimal != null) {
+                    animals.add(newAnimal);
+                    newAnimal.setLocation(row, col);
+                    field.place(newAnimal, row, col);
                 }
                 // else leave the location empty.
             }

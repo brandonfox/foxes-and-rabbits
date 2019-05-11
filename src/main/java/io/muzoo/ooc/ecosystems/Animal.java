@@ -1,12 +1,8 @@
 package io.muzoo.ooc.ecosystems;
 
 import java.util.List;
-import java.util.Random;
 
 public abstract class Animal extends Actor {
-
-    //A shared random number generator to control breeding
-    protected static final Random rand = new Random();
 
     //The animal's age
     private int age;
@@ -48,7 +44,8 @@ public abstract class Animal extends Actor {
      * @param updatedField The updated where the new move location will be saved
      * @param locationToMove the location where the animal will be moved to
      */
-    private void move(Field updatedField, Location locationToMove){
+    @Override
+    protected void move(Field updatedField, Location locationToMove){
         if (locationToMove != null) {
             setLocation(locationToMove);
             updatedField.place(this, locationToMove);

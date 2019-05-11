@@ -66,7 +66,7 @@ public abstract class Predator extends Animal {
 
     /**
      * Attempt to eat animal
-     * @param The animal to eat
+     * @param a The animal to eat
      * @return Whether this animal can eat the animal or not
      */
     private boolean eat(Animal a){

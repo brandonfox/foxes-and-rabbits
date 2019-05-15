@@ -55,8 +55,8 @@ public class Simulator {
         }
         actors = new ArrayList<>();
         newActors = new ArrayList<>();
-        field = new Field(depth, width);
-        updatedField = new Field(depth, width);
+        field = FieldFactory.createField(depth, width);
+        updatedField = FieldFactory.createField(depth, width);
 
         // Create a view of the state of each location in the field.
         view = new SimulatorView(depth, width);

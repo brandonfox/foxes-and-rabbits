@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class FieldFactory {
+public abstract class FieldFactory {
 
     public static Field createField(int height, int width){
         Field field = new Field(height,width);

@@ -29,14 +29,11 @@ public class SimulatorView extends JFrame {
 
     // A map for storing colors for participants in the simulation
     private HashMap colors;
-    // A statistics object computing and storing simulation information
-    private FieldStats stats;
 
     /**
      * Create a view of the given width and height.
      */
-    public SimulatorView(int height, int width) {
-        stats = new FieldStats();
+    public SimulatorView(Simulator simulator) {
         colors = new HashMap();
 
         setTitle("Fox and Rabbit Simulation");
@@ -45,7 +42,9 @@ public class SimulatorView extends JFrame {
 
         setLocation(100, 50);
 
-        fieldView = new FieldView(height, width);
+        fieldView = new FieldView(simulator.getDepth(), simulator.getWidth());
+
+        simulator.attachView(this);
 
         Container contents = getContentPane();
         contents.add(stepLabel, BorderLayout.NORTH);
@@ -84,12 +83,11 @@ public class SimulatorView extends JFrame {
      * @param step  Which iteration step it is.
      * @param field The field whose status is to be displayed.
      */
-    public void showStatus(int step, Field field) {
+    public void showStatus(int step, Field field, FieldStats stats) {
         if (!isVisible())
             setVisible(true);
 
         stepLabel.setText(STEP_PREFIX + step);
-        stats.reset();
 
         fieldView.preparePaint();
 
@@ -97,27 +95,17 @@ public class SimulatorView extends JFrame {
             for (int col = 0; col < field.getWidth(); col++) {
                 Object animal = field.getObjectAt(row, col);
                 if (animal != null) {
-                    stats.incrementCount(animal.getClass());
                     fieldView.drawMark(col, row, getColor(animal.getClass()));
                 } else {
                     fieldView.drawMark(col, row, EMPTY_COLOR);
                 }
             }
         }
-        stats.countFinished();
 
         population.setText(POPULATION_PREFIX + stats.getPopulationDetails(field));
         fieldView.repaint();
     }
 
-    /**
-     * Determine whether the simulation should continue to run.
-     *
-     * @return true If there is more than one species alive.
-     */
-    public boolean isViable(Field field) {
-        return stats.isViable(field);
-    }
 
     /**
      * Provide a graphical view of a rectangular field. This is

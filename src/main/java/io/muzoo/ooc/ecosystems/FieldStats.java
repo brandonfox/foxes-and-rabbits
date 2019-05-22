@@ -25,7 +25,7 @@ public class FieldStats {
         // Set up a collection for counters for each type of animal that
         // we might find
         counters = new HashMap();
-        countsValid = true;
+        countsValid = false;
     }
 
     /**

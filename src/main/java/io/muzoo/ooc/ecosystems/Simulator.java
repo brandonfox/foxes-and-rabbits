@@ -1,8 +1,6 @@
 package io.muzoo.ooc.ecosystems;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.awt.Color;
 
 /**
@@ -31,7 +29,9 @@ public class Simulator {
     // The current step of the simulation.
     private int step;
     // A graphical view of the simulation.
-    private SimulatorView view;
+    private final Set<SimulatorView> attachedViews = new HashSet<>();
+    // A statistics object computing and storing simulation information
+    private FieldStats stats;
 
     /**
      * Construct a simulation field with default size.
@@ -53,15 +53,11 @@ public class Simulator {
             depth = DEFAULT_DEPTH;
             width = DEFAULT_WIDTH;
         }
+        stats = new FieldStats();
         actors = new ArrayList<>();
         newActors = new ArrayList<>();
         field = FieldFactory.createField(depth, width);
         updatedField = FieldFactory.createField(depth, width);
-
-        // Create a view of the state of each location in the field.
-        view = new SimulatorView(depth, width);
-        view.setColor(Fox.class, Color.blue);
-        view.setColor(Rabbit.class, Color.orange);
 
         // Setup a valid starting point.
         reset();
@@ -80,7 +76,7 @@ public class Simulator {
      * Stop before the given number of steps if it ceases to be viable.
      */
     public void simulate(int numSteps) {
-        for (int step = 1; step <= numSteps && view.isViable(field); step++) {
+        for (int step = 1; step <= numSteps && stats.isViable(field); step++) {
             simulateOneStep();
         }
     }
@@ -106,9 +102,10 @@ public class Simulator {
         field = updatedField;
         updatedField = temp;
         updatedField.clear();
+        stats.reset();
 
         // display the new field on screen
-        view.showStatus(step, field);
+        updateViews();
     }
 
     /**
@@ -122,7 +119,25 @@ public class Simulator {
         actors = FieldFactory.populate(field);
 
         // Show the starting state in the view.
-        view.showStatus(step, field);
+        updateViews();
+    }
+
+    private void updateViews(){
+        for (SimulatorView view:attachedViews) {
+            view.showStatus(step,field,stats);
+        }
+    }
+    public int getDepth(){
+        return field.getDepth();
+    }
+    public int getWidth(){
+        return field.getDepth();
+    }
+    public void attachView(SimulatorView view){
+        attachedViews.add(view);
+    }
+    public void detachView(SimulatorView view){
+        attachedViews.remove(view);
     }
 
 }
